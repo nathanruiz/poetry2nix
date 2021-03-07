@@ -6,6 +6,12 @@
 self: super:
 
 {
+  aiohttp-sse-client = super.aiohttp-sse-client.overridePythonAttrs (
+    old: rec {
+      buildInputs = (old.buildInputs or [ ]) ++ [ self.pytest-runner ];
+    }
+  );
+
   automat = super.automat.overridePythonAttrs (
     old: rec {
       propagatedBuildInputs = old.propagatedBuildInputs ++ [ self.m2r ];
@@ -1278,6 +1284,14 @@ self: super:
     old: {
       postPatch = ''
         substituteInPlace setup.py --replace "install_requires = ['requests>=2.4.2', 'enum34']" "install_requires = ['requests>=2.4.2']" || true
+      '';
+    }
+  );
+
+  stellar-sdk = super.stellar-sdk.overridePythonAttrs (
+    old: rec {
+      preBuild = ''
+        touch requirements.txt
       '';
     }
   );
